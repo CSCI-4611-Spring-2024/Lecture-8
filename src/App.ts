@@ -11,6 +11,9 @@ export class App extends gfx.GfxApp
     private ground: gfx.Mesh3;
     private skybox: gfx.Mesh3;
 
+    private sphere: gfx.Mesh3;
+    private sphereVelocity: gfx.Vector3;
+
     // --- Create the App class ---
     constructor()
     {
@@ -19,6 +22,8 @@ export class App extends gfx.GfxApp
 
         this.ground = gfx.Geometry3Factory.createBox(50, 1, 50);
         this.skybox = gfx.Geometry3Factory.createBox(100, 100, 100);
+        this.sphere = gfx.Geometry3Factory.createSphere();
+        this.sphereVelocity = new gfx.Vector3();
     }
 
 
@@ -44,20 +49,29 @@ export class App extends gfx.GfxApp
         this.skybox.material.side = gfx.Side.BACK;
         this.skybox.material.setColor(new gfx.Color(0.698, 1, 1));
 
-        const testSphere = gfx.Geometry3Factory.createSphere();
-        testSphere.position.set(0, 2, -6);
+        
+        this.sphere.position.set(0, 5, -6);
 
         this.scene.add(ambientLight);
         this.scene.add(directionalLight);
         this.scene.add(this.ground);
         this.scene.add(this.skybox);
-        this.scene.add(testSphere);
+        this.scene.add(this.sphere);
     }
 
     
     // --- Update is called once each frame by the main graphics loop ---
     update(deltaTime: number): void 
     {
+        // Set acceleratation
+        const sphereAcceleration = new gfx.Vector3(0, -9.8, 0); // acceleration in m per sec. per sec
 
+        // v_new = v_old + a * dt
+        const a_dt = gfx.Vector3.multiplyScalar(sphereAcceleration, deltaTime);
+        this.sphereVelocity.add(a_dt);
+
+        // p_new = p_old + v_new * dt
+        const v_dt = gfx.Vector3.multiplyScalar(this.sphereVelocity, deltaTime);
+        this.sphere.position.add(v_dt);
     }
 }
