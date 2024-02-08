@@ -49,8 +49,8 @@ export class App extends gfx.GfxApp
         this.skybox.material.side = gfx.Side.BACK;
         this.skybox.material.setColor(new gfx.Color(0.698, 1, 1));
 
-        
-        this.sphere.position.set(0, 5, -6);
+        this.sphere.position.set(0, 1, -6);
+        this.sphereVelocity.set(0, 10, 0);
 
         this.scene.add(ambientLight);
         this.scene.add(directionalLight);
