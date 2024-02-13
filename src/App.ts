@@ -13,6 +13,7 @@ export class App extends gfx.GfxApp
 
     private sphere: gfx.Mesh3;
     private sphereVelocity: gfx.Vector3;
+    private sphereRadius: number;
 
     // --- Create the App class ---
     constructor()
@@ -20,9 +21,11 @@ export class App extends gfx.GfxApp
         // initialize the base class gfx.GfxApp
         super();
 
+        this.sphereRadius = 1.0;
+
         this.ground = gfx.Geometry3Factory.createBox(50, 1, 50);
         this.skybox = gfx.Geometry3Factory.createBox(100, 100, 100);
-        this.sphere = gfx.Geometry3Factory.createSphere();
+        this.sphere = gfx.Geometry3Factory.createSphere(this.sphereRadius);
         this.sphereVelocity = new gfx.Vector3();
     }
 
@@ -73,5 +76,11 @@ export class App extends gfx.GfxApp
         // p_new = p_old + v_new * dt
         const v_dt = gfx.Vector3.multiplyScalar(this.sphereVelocity, deltaTime);
         this.sphere.position.add(v_dt);
+
+        if(this.sphere.position.y - this.sphereRadius < 0)
+        {
+            console.log("collision detected: ", this.sphere.position.y);
+            this.pause();
+        }
     }
 }
