@@ -21,7 +21,7 @@ export class App extends gfx.GfxApp
         // initialize the base class gfx.GfxApp
         super();
 
-        this.sphereRadius = 1.0;
+        this.sphereRadius = 0.5;
 
         this.ground = gfx.Geometry3Factory.createBox(50, 1, 50);
         this.skybox = gfx.Geometry3Factory.createBox(100, 100, 100);
@@ -79,8 +79,24 @@ export class App extends gfx.GfxApp
 
         if(this.sphere.position.y - this.sphereRadius < 0)
         {
+            // collision position correction
+            this.sphere.position.y = this.sphereRadius;
+
+            // reflected velocity
+            this.sphereVelocity.y *= -1.0;
+
+            // slow down the bounce to account for friction
+            // this should only be applied once per collision
+            const frictionSlowDown = 0.75;
+            this.sphereVelocity.multiplyScalar(frictionSlowDown);
+
+            // debug output to determine whether a collision is detected
+            // in multiple consecutive frames
             console.log("collision detected: ", this.sphere.position.y);
-            this.pause();
+
+            // useful for stopping the simulation to check the computed
+            // position and velocity after a collision
+            // this.pause();
         }
     }
 }
